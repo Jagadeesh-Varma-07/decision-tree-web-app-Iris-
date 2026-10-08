@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decision Tree Prediction</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #eef2ff, #f8fafc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            color: #172033;
+        }
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: white;
+            border-radius: 22px;
+            padding: 35px;
+            box-shadow: 0 15px 45px rgba(30, 41, 59, 0.12);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .header h1 {
+            margin: 0 0 8px;
+            font-size: 32px;
+        }
+        .header p {
+            margin: 0;
+            color: #64748b;
+        }
+        .model-badge {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: #eef2ff;
+            color: #4338ca;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+        .field label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 600;
+        }
+        .field input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+        }
+        .field input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+        }
+        .full { grid-column: 1 / -1; }
+        button {
+            width: 100%;
+            border: 0;
+            padding: 15px;
+            border-radius: 11px;
+            background: #4f46e5;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover { background: #4338ca; }
+        .result {
+            margin-top: 25px;
+            padding: 22px;
+            border-radius: 14px;
+            text-align: center;
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+        }
+        .result h2 {
+            margin: 0 0 7px;
+            color: #047857;
+        }
+        .result .class-name {
+            font-size: 25px;
+            font-weight: bold;
+            color: #065f46;
+        }
+        .error {
+            margin-top: 20px;
+            padding: 14px;
+            border-radius: 10px;
+            background: #fef2f2;
+            color: #b91c1c;
+            text-align: center;
+        }
+        .info {
+            margin-top: 25px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 12px;
+            color: #475569;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        @media (max-width: 650px) {
+            form { grid-template-columns: 1fr; }
+            .full { grid-column: auto; }
+            .container { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🌿 Iris Classification</h1>
+        <p>Enter flower measurements and get a Decision Tree prediction.</p>
+        <span class="model-badge">Decision Tree Classifier • max_depth = 3</span>
+    </div>
+
+    <form method="POST">
+        <div class="field">
+            <label for="sepal_length">Sepal Length (cm)</label>
+            <input id="sepal_length" name="sepal_length" type="number" step="0.1"
+                   value="{{ values.sepal_length }}" placeholder="Example: 5.1" required>
+        </div>
+
+        <div class="field">
+            <label for="sepal_width">Sepal Width (cm)</label>
+            <input id="sepal_width" name="sepal_width" type="number" step="0.1"
+                   value="{{ values.sepal_width }}" placeholder="Example: 3.5" required>
+        </div>
+
+        <div class="field">
+            <label for="petal_length">Petal Length (cm)</label>
+            <input id="petal_length" name="petal_length" type="number" step="0.1"
+                   value="{{ values.petal_length }}" placeholder="Example: 1.4" required>
+        </div>
+
+        <div class="field">
+            <label for="petal_width">Petal Width (cm)</label>
+            <input id="petal_width" name="petal_width" type="number" step="0.1"
+                   value="{{ values.petal_width }}" placeholder="Example: 0.2" required>
+        </div>
+
+        <div class="full">
+            <button type="submit">Predict Species</button>
+        </div>
+    </form>
+
+    {% if prediction %}
+    <div class="result">
+        <h2>Prediction Result</h2>
+        <div class="class-name">{{ prediction }}</div>
+    </div>
+    {% endif %}
+
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <div class="info">
+        <strong>How it works:</strong><br>
+        Web page → Flask backend → trained Decision Tree model →
+        prediction → result displayed on this page.
+    </div>
+</div>
+</body>
+</html>
